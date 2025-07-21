@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Vote in Election: {{ election_title }}</h4>
+                <small class="text-muted">Hosted by: {{ host_username }}</small>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('vote', election_id=election_id) }}">
+                    <h5 class="mb-3">Select your candidate:</h5>
+                    
+                    <div class="list-group">
+                        {% for candidate in candidates %}
+                        <label class="list-group-item">
+                            <input class="form-check-input me-2" type="radio" name="candidate_id" 
+                                   value="{{ candidate.id }}" required>
+                            {{ candidate.candidate_name }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Submit Vote</button>
+                        <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(to right, #4A90E2, #9013FE);
+        
+    }
+</style>
+
+{% endblock %}

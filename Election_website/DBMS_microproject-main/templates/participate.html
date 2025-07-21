@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card participation-card">
+            <div class="card-header text-center">Participate in Election</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('participate') }}">
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Election Password</label>
+                        <input type="password" class="form-control input-field" id="password" name="password" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn primary-btn">Join Election</button>
+                        <a href="{{ url_for('home') }}" class="btn secondary-btn">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Link External CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/participate.css') }}">
+{% endblock %}

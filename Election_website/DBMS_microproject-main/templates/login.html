@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Online Voting System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h2 class="login-title">Login</h2>
+
+            <form action="{{ url_for('login') }}" method="post">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" autocomplete="off" placeholder="Enter your username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="off" placeholder="Enter your password" required >
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <div class="links">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+                <p>Forgot password? <a href="#">Click here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

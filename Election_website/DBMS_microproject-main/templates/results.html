@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="col-md-8">
+        <div class="card results-card">
+            <div class="card-header text-center">
+                <h2 class="mb-0">Official Results</h2>
+                <small class="text-muted">Published on: {{ published_at.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="election-title">{{ election_title }}</h4>
+                <p class="text-muted">Hosted by: <strong>{{ host_name }}</strong></p>
+                
+                <div class="results-summary">
+                    <h5 class="mb-3">Final Results</h5>
+                    <p class="total-votes">Total votes cast: <strong>{{ total_votes }}</strong></p>
+                    
+                    <div class="winner-card">
+                        <h4 class="winner-label">Winner</h4>
+                        <div class="winner-name">{{ winner }}</div>
+                        <div class="vote-count">
+                            <span class="votes">{{ winner_votes }} votes</span>
+                            <span class="percentage">({{ percentage }}%)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('home') }}" class="btn primary-btn mt-4">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Link External CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+{% endblock %}

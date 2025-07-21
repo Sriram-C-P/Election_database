@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Welcome to the Online Voting System</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Host an Election</h5>
+                    <p class="card-text">Create and manage your own elections.</p>
+                    <a href="{{ url_for('host') }}" class="btn btn-custom">Go to Host Panel</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Participate in Election</h5>
+                    <p class="card-text">Vote in existing elections.</p>
+                    <a href="{{ url_for('participate') }}" class="btn btn-custom-green">Participate Now</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">View Results</h5>
+                    <form action="{{ url_for('check_results') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="election_password" class="form-label">Enter Election Password:</label>
+                            <input type="password" class="form-control" id="election_password" name="election_password" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-custom-blue">Check Results</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Link External CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
