@@ -1,10 +1,10 @@
-Secure Online Voting System
+#Secure Online Voting System
 
 This is a web-based, decentralized voting platform built with Python, Flask, and MySQL. It was developed to solve the friction and security risks of manual elections by allowing any registered user to host isolated, password-protected elections.
 
 This project demonstrates strong relational database modeling, session management, state transitions, and fundamental web security practices.
 
-Core Features
+#Core Features
 
 Isolated Elections: Any user can act as an Election Commission. Elections are partitioned using unique access passwords, acting like a private meeting room for voters.
 
@@ -22,7 +22,7 @@ Application secrets and database credentials are fully abstracted using environm
 
 All form submissions are secured against Cross-Site Request Forgery (CSRF) using Flask-WTF.
 
-Tech Stack
+#Tech Stack
 
 Backend: Python, Flask
 
@@ -32,7 +32,7 @@ Security: werkzeug.security (hashing), Flask-WTF (CSRF protection), python-doten
 
 Frontend: Vanilla HTML, CSS, JavaScript, Bootstrap 5
 
-Database Schema Overview
+#Database Schema Overview
 
 The application relies on a normalized relational database containing five core tables:
 
@@ -46,7 +46,7 @@ participants: The immutable audit log that maps user_id to election_id to mathem
 
 results: A historical snapshot table that permanently archives the final tallies of closed elections.
 
-Local Setup Instructions
+#Local Setup Instructions
 
 To run this project on your local machine, you will need Python 3.x and a running instance of MySQL Server.
 
@@ -74,6 +74,8 @@ You will need to create the five tables mentioned in the schema overview to matc
 4. Configure Environment Variables
 
 Create a file named .env in the root directory of the project (at the same level as app1.py). Add the following configuration, replacing the placeholder values with your actual database credentials:
+
+
 
 # Database Configuration
 MYSQL_HOST=localhost
