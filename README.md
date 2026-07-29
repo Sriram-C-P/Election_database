@@ -43,18 +43,20 @@ Navigate to your desired directory in your terminal and clone the project files.
 It is recommended to use a virtual environment. Install the required Python libraries using the provided requirements file:
 ```bash
 pip install -r requirements.txt
-3. Setup the MySQL Database
-Log into your local MySQL instance and create a new database. For example:
+```
 
-SQL
+### 3. Setup the MySQL Database
+Log into your local MySQL instance and create a new database. For example:
+```sql
 CREATE DATABASE project1;
 USE project1;
-You will need to create the five tables mentioned in the schema overview to match the SQL queries written in app1.py.
+```
+You will need to create the five tables mentioned in the schema overview to match the SQL queries written in `app1.py`.
 
-4. Configure Environment Variables
-Create a file named .env in the root directory of the project (at the same level as app1.py). Add the following configuration, replacing the placeholder values with your actual database credentials:
+### 4. Configure Environment Variables
+Create a file named `.env` in the root directory of the project (at the same level as `app1.py`). Add the following configuration, replacing the placeholder values with your actual database credentials:
 
-Code snippet
+```env
 # Database Configuration
 MYSQL_HOST=localhost
 MYSQL_USER=root
@@ -64,24 +66,24 @@ MYSQL_DB=project1
 # Flask Configuration
 FLASK_DEBUG=true
 FLASK_SECRET_KEY=your_generated_secret_key
-Note: You must generate a secure random string for the FLASK_SECRET_KEY. You can do this by running the following command in your terminal and pasting the output into your .env file:
+```
 
-Bash
+*Note: You must generate a secure random string for the `FLASK_SECRET_KEY`. You can do this by running the following command in your terminal and pasting the output into your .env file:*
+```bash
 python -c "import secrets; print(secrets.token_hex(32))"
-5. Run the Application
+```
+
+### 5. Run the Application
 Start the Flask development server:
-
-Bash
+```bash
 python app1.py
-The application will be accessible in your web browser at http://127.0.0.1:5000.
+```
+The application will be accessible in your web browser at `http://127.0.0.1:5000`.
 
-Application Flow
-Register/Login: Users must create an account to either host or participate in an election.
+## Application Flow
 
-Host an Election: A logged-in user creates an election with a title, a unique password, and up to 4 candidates.
-
-Participate: Voters enter the election password to access the voting booth.
-
-Vote: Voters select a candidate. The system records the vote and locks the user out of voting in that specific election again.
-
-Publish Results: The host goes to their dashboard and publishes the results, permanently locking the election and making the winner visible to all participants.
+1. **Register/Login:** Users must create an account to either host or participate in an election.
+2. **Host an Election:** A logged-in user creates an election with a title, a unique password, and up to 4 candidates.
+3. **Participate:** Voters enter the election password to access the voting booth.
+4. **Vote:** Voters select a candidate. The system records the vote and locks the user out of voting in that specific election again.
+5. **Publish Results:** The host goes to their dashboard and publishes the results, permanently locking the election and making the winner visible to all participants.
