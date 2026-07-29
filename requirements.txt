@@ -1,0 +1,4 @@
+Flask
+flask-mysqldb
+Flask-WTF
+python-dotenv
