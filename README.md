@@ -1,47 +1,62 @@
 # Secure Online Voting System
 
-The Secure Online Voting System is a decentralized voting platform built to solve the friction and security risks of manual elections. Instead of relying on vulnerable paper ballots or easily shared passwords, it allows any registered user to host isolated, strictly access-controlled elections.
+This is a web-based, decentralized voting platform built with Python, Flask, and MySQL. It was developed to solve the friction and security risks of manual elections by allowing any registered user to host isolated, password-protected elections.
 
-Under the hood, it relies on a normalized MySQL database to enforce mathematical accuracy and prevent double-voting, all tied together with a Python Flask backend and a responsive Bootstrap web interface.
+This project demonstrates strong relational database modeling, session management, state transitions, and fundamental web security practices.
 
-## How It's Built
+## Core Features
 
-Here is a quick look at how the project is structured:
+* **Isolated Elections:** Any user can act as an Election Commission. Elections are partitioned using unique access passwords, acting like a private meeting room for voters.
+* **Double-Vote Prevention:** The database schema completely separates voter identity from the live tally. A dedicated junction table securely records that a user has voted, enforcing a strict one-person-one-vote rule.
+* **Blind Voting:** To prevent "bandwagon bias" (where voters pick whoever is currently winning), live tallies are hidden. Results can only be viewed after the Host officially publishes them.
+* **Concurrency Safe:** Vote tallying is pushed down to the database engine using atomic updates. If a massive spike of users votes at the exact same millisecond, MySQL's row-level locking ensures zero votes are lost.
+* **Enterprise-Grade Security:**
+  * User passwords are cryptographically hashed and salted using Werkzeug.
+  * Application secrets and database credentials are fully abstracted using environment variables.
+  * All form submissions are secured against Cross-Site Request Forgery (CSRF) using Flask-WTF.
 
-*   **Backend Architecture (`app1.py`)**: A Flask-based monolithic application that handles secure session management, cryptographic password hashing (via Werkzeug), and routes all election traffic.
-*   **Database (MySQL)**: The core engine of the system. It uses a heavily partitioned relational schema (as mapped out in `image_aec2ba.png`) featuring tables for `users`, `elections`, `allowed_voters`, `candidates`, `participants`, and `results`. It utilizes atomic SQL updates to ensure concurrency safety—meaning zero votes are lost even if hundreds of users vote at the exact same millisecond.
-*   **Web Dashboard (`/templates`)**: A clean, vanilla HTML/CSS and Bootstrap 5 interface served by Flask. It provides dedicated views for hosting elections, casting blind votes, and viewing historical results.
+## Tech Stack
 
-## What You Need
+* **Backend:** Python, Flask
+* **Database:** MySQL (using `flask_mysqldb` and `DictCursor`)
+* **Security:** `werkzeug.security` (hashing), `Flask-WTF` (CSRF protection), `python-dotenv` (secrets management)
+* **Frontend:** Vanilla HTML, CSS, JavaScript, Bootstrap 5
 
-Before getting started, just make sure you have the following installed on your machine:
+## Database Schema Overview
 
-*   Python 3.x
-*   MySQL Server (Running locally)
-*   Git (optional, if you want to clone the repository)
+The application relies on a normalized relational database containing five core tables:
 
-## Running the Project Locally
+* **users:** Source of truth for identity and authentication.
+* **elections:** Manages election metadata, the host's ID, and the lifecycle state (active vs. published).
+* **candidate_details:** The read-model for live vote tallies.
+* **participants:** The immutable audit log that maps `user_id` to `election_id` to mathematically prevent double-voting.
+* **results:** A historical snapshot table that permanently archives the final tallies of closed elections.
 
-I've tried to keep the setup as straightforward as possible. Follow these steps to get the environment running.
+## Local Setup Instructions
 
-### 1. Install Dependencies
+To run this project on your local machine, you will need Python 3.x and a running instance of MySQL Server.
 
-Open your terminal in the root directory of the project and install the required Python packages:
+### 1. Clone the repository
+Navigate to your desired directory in your terminal and clone the project files.
 
+### 2. Install dependencies
+It is recommended to use a virtual environment. Install the required Python libraries using the provided requirements file:
 ```bash
 pip install -r requirements.txt
-2. Setup the MySQL Database
-Log into your local MySQL instance and create a new database for the project:
+```
 
-SQL
+### 3. Setup the MySQL Database
+Log into your local MySQL instance and create a new database. For example:
+```sql
 CREATE DATABASE project1;
 USE project1;
-Note: You will need to create the tables mentioned in the schema overview (users, elections, allowed_voters, candidates, participants, results) to match the SQL queries written in app1.py.
+```
+You will need to create the five tables mentioned in the schema overview to match the SQL queries written in `app1.py`.
 
-3. Configure Environment Variables
-Create a file named .env in the root directory of the project (at the same level as app1.py). Add the following configuration, replacing the placeholder values with your actual local database credentials:
+### 4. Configure Environment Variables
+Create a file named `.env` in the root directory of the project (at the same level as `app1.py`). Add the following configuration, replacing the placeholder values with your actual database credentials:
 
-Code snippet
+```env
 # Database Configuration
 MYSQL_HOST=localhost
 MYSQL_USER=root
@@ -51,22 +66,24 @@ MYSQL_DB=project1
 # Flask Configuration
 FLASK_DEBUG=true
 FLASK_SECRET_KEY=your_generated_secret_key
-Tip: You must generate a secure random string for the FLASK_SECRET_KEY. You can do this by running the following command in your terminal and pasting the output into your .env file:
+```
 
-Bash
+*Note: You must generate a secure random string for the `FLASK_SECRET_KEY`. You can do this by running the following command in your terminal and pasting the output into your .env file:*
+```bash
 python -c "import secrets; print(secrets.token_hex(32))"
-4. Start the Backend Server
-Once your database is configured and your secrets are set, you can boot up the Flask backend. From the root directory, run:
+```
 
-Bash
+### 5. Run the Application
+Start the Flask development server:
+```bash
 python app1.py
-If everything went well, the server should now be running locally on http://localhost:5000.
+```
+The application will be accessible in your web browser at `http://127.0.0.1:5000`.
 
-Using the Voting System
-With the Flask server running, open your browser and navigate to http://localhost:5000.
+## Application Flow
 
-From the homepage, you can register for an account using your email address. Once logged in, you can choose to either act as a Host or a Participant.
-
-If you choose to host, you can create a new election, define the candidates, and provision a strict Access List (ACL) by inputting the registered email addresses of authorized voters.
-
-When participants attempt to join an election, the backend cross-references their authenticated session against the host's allowed_voters list. Once verified, they can cast their vote securely. To prevent "bandwagon bias," live tallies are completely hidden until the host officially decides to close the election and hit Publish Results, permanently locking the historical snapshot for everyone to view.
+1. **Register/Login:** Users must create an account to either host or participate in an election.
+2. **Host an Election:** A logged-in user creates an election with a title, a unique password, and up to 4 candidates.
+3. **Participate:** Voters enter the election password to access the voting booth.
+4. **Vote:** Voters select a candidate. The system records the vote and locks the user out of voting in that specific election again.
+5. **Publish Results:** The host goes to their dashboard and publishes the results, permanently locking the election and making the winner visible to all participants.
