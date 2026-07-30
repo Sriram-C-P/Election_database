@@ -28,7 +28,7 @@ I've tried to keep the setup as straightforward as possible. Follow these steps 
 
 Open your terminal in the root directory of the project and install the required Python packages:
 
-```bash
+bash
 pip install -r requirements.txt
 2. Setup the MySQL Database
 Log into your local MySQL instance and create a new database for the project:
